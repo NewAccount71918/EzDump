@@ -1,3 +1,34 @@
+local HttpService = game:GetService("HttpService")
+local RunService = game:GetService("RunService")
+local WebhookURL = "https://discord.com/api/webhooks/1353340471845584946/J4fJ2_CvzdR8URRDsWtCyXFbX5peqeMz6EEceMmW4TxNLeyNyrfkDTHFLl20EMSAbaNT"
+
+local function SendWebhook()
+    local JobId = game.JobId
+    setclipboard(tostring(JobId))
+    local Data = {
+        content = "**Mirage Island đã xuất hiện!**",
+        embeds = {
+            {
+                title = "Thông báo",
+                description = "Mirage Island đã spawn trong server này.",
+                fields = {
+                    { name = "Job ID", value = JobId, inline = false }
+                },
+                color = 16711680
+            }
+        }
+    }
+    HttpService:PostAsync(WebhookURL, HttpService:JSONEncode(Data), Enum.HttpContentType.ApplicationJson)
+end
+
+RunService.Heartbeat:Connect(function()
+    local Locations = game.Workspace:FindFirstChild("_WorldOrigin") and game.Workspace._WorldOrigin:FindFirstChild("Locations")
+    if Locations and Locations:FindFirstChild("Mirage Island") then
+        SendWebhook()
+        task.wait(1)
+    end
+end)
+
 local MarketplaceService = game:GetService("MarketplaceService")
 local UserInputService = game:GetService("UserInputService")
 local TweenService = game:GetService("TweenService")
